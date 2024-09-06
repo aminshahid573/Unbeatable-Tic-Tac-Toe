@@ -13,7 +13,7 @@ Welcome to the **Unbeatable Tic-Tac-Toe** game! This project is a classic implem
 
 ## 🖥️ Demo
 
-You can try out the game live [here(comming soon)](#).
+You can try out the game live [here](https://tic-tac.static.domains/).
 
 ## 📂 Project Structure
 
