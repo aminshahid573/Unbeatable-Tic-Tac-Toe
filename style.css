@@ -47,13 +47,23 @@ body {
     font-size: 1.5rem;
 }
 
-#turn-selector {
+#symbol-selector,
+#turn-selector,
+#mode-selector,
+#friend-mode {
     margin-bottom: 20px;
+    text-align: center;
 }
 
 button {
-    margin-top: 20px;
+    margin: 5px;
     padding: 10px 20px;
     font-size: 1rem;
     cursor: pointer;
+}
+
+input {
+    padding: 10px;
+    margin: 5px;
+    font-size: 1rem;
 }
