@@ -6,6 +6,9 @@ let player2Name = "Player 2";
 let gameMode = "ai"; // Default mode is AI
 const cells = document.querySelectorAll('.cell');
 const result = document.getElementById('result');
+const endgamePopup = document.querySelector('.endgame');
+const endgameMessage = document.querySelector('.endgame .msg');
+const endgameNewgameBtn = document.querySelector('.endgame-newgame');
 
 cells.forEach(cell => cell.addEventListener('click', handleClick));
 
@@ -67,15 +70,69 @@ function handleClick(e) {
 
 function makeMove(index, currentPlayer) {
     board[index] = currentPlayer;
-    const span = cells[index].querySelector('span');
+    const cell = cells[index];
+    const span = cell.querySelector('span');
+    cell.classList.remove('x', 'o');
+    cell.classList.add(currentPlayer.toLowerCase());
+    cell.setAttribute('data-hover', currentPlayer); // Set hover effect text
     span.textContent = currentPlayer;
     span.classList.add('show');
     
     if (checkWinner(board, currentPlayer)) {
-        result.innerText = gameMode === 'ai' ? (currentPlayer === player ? 'You win!' : 'Computer wins!') : `${currentPlayer === 'X' ? player1Name : player2Name} wins!`;
+        showEndgamePopup(currentPlayer === player ? 'player' : 'ai');
     } else if (isBoardFull(board)) {
-        result.innerText = 'It\'s a tie!';
+        showEndgamePopup('draw');
     }
+}
+
+function showEndgamePopup(resultType) {
+    endgamePopup.style.display = 'block';
+    if (resultType === 'player') {
+        endgameMessage.className = 'msg msg--x-win';
+        endgameMessage.textContent = gameMode === 'ai' ? 'You win!' : `${player1Name} wins!`;
+    } else if (resultType === 'ai') {
+        endgameMessage.className = 'msg msg--o-win';
+        endgameMessage.textContent = gameMode === 'ai' ? 'Computer wins!' : `${player2Name} wins!`;
+    } else if (resultType === 'draw') {
+        endgameMessage.className = 'msg msg--draw';
+        endgameMessage.textContent = 'It\'s a tie!';
+    }
+}
+
+endgameNewgameBtn.addEventListener('click', () => {
+    resetBoard();
+    endgamePopup.style.display = 'none'; // Ensure popup is hidden
+});
+
+function resetBoard() {
+    board = ['', '', '', '', '', '', '', '', ''];
+    cells.forEach(cell => {
+        cell.classList.remove('x', 'o');
+        cell.setAttribute('data-hover', ''); // Clear hover text
+        const span = cell.querySelector('span');
+        span.classList.remove('show');
+        span.textContent = '';
+    });
+    document.getElementById('game-board').style.display = 'none';
+    document.getElementById('reset-btn').style.display = 'none';
+    document.getElementById('home-btn').style.display = 'none';
+    document.getElementById('mode-selector').style.display = 'block';
+}
+
+function checkWinner(board, player) {
+    const winPatterns = [
+        [0, 1, 2], [3, 4, 5], [6, 7, 8], // Rows
+        [0, 3, 6], [1, 4, 7], [2, 5, 8], // Columns
+        [0, 4, 8], [2, 4, 6] // Diagonals
+    ];
+
+    return winPatterns.some(pattern => {
+        return pattern.every(index => board[index] === player);
+    });
+}
+
+function isBoardFull(board) {
+    return board.every(cell => cell !== '');
 }
 
 function bestMove() {
@@ -96,12 +153,9 @@ function bestMove() {
 }
 
 function minimax(newBoard, depth, isMaximizing, alpha, beta) {
-    let scores = { [ai]: 10, [player]: -10, 'tie': 0 };
-    let result = checkWinner(newBoard, ai) ? ai : (checkWinner(newBoard, player) ? player : (isBoardFull(newBoard) ? 'tie' : null));
-
-    if (result !== null) {
-        return scores[result] - depth;
-    }
+    if (checkWinner(newBoard, ai)) return 10 - depth;
+    if (checkWinner(newBoard, player)) return depth - 10;
+    if (isBoardFull(newBoard)) return 0;
 
     if (isMaximizing) {
         let bestScore = -Infinity;
@@ -111,10 +165,8 @@ function minimax(newBoard, depth, isMaximizing, alpha, beta) {
                 let score = minimax(newBoard, depth + 1, false, alpha, beta);
                 newBoard[i] = '';
                 bestScore = Math.max(score, bestScore);
-                alpha = Math.max(alpha, bestScore);
-                if (beta <= alpha) {
-                    break;
-                }
+                alpha = Math.max(alpha, score);
+                if (beta <= alpha) break;
             }
         }
         return bestScore;
@@ -126,49 +178,10 @@ function minimax(newBoard, depth, isMaximizing, alpha, beta) {
                 let score = minimax(newBoard, depth + 1, true, alpha, beta);
                 newBoard[i] = '';
                 bestScore = Math.min(score, bestScore);
-                beta = Math.min(beta, bestScore);
-                if (beta <= alpha) {
-                    break;
-                }
+                beta = Math.min(beta, score);
+                if (beta <= alpha) break;
             }
         }
         return bestScore;
     }
-}
-
-function checkWinner(board, currentPlayer) {
-    const winPatterns = [
-        [0, 1, 2],
-        [3, 4, 5],
-        [6, 7, 8],
-        [0, 3, 6],
-        [1, 4, 7],
-        [2, 5, 8],
-        [0, 4, 8],
-        [2, 4, 6]
-    ];
-
-    return winPatterns.some(pattern => pattern.every(index => board[index] === currentPlayer));
-}
-
-function isBoardFull(board) {
-    return board.every(cell => cell !== '');
-}
-
-function resetBoard() {
-    board = ['', '', '', '', '', '', '', '', ''];
-    cells.forEach(cell => {
-        cell.querySelector('span').textContent = '';
-        cell.querySelector('span').classList.remove('show');
-    });
-    result.innerText = '';
-}
-
-function navigateHome() {
-    document.getElementById('game-board').style.display = 'none';
-    document.getElementById('reset-btn').style.display = 'none';
-    document.getElementById('home-btn').style.display = 'none';
-    document.getElementById('result').innerText = '';
-    document.getElementById('mode-selector').style.display = 'block';
-    resetBoard();
 }
