@@ -18,7 +18,7 @@ To speed up the decision-making process, **heuristics** are applied to prune unn
 
 ## 🌐 Live Demo
 
-The game is hosted and can be played online at: [Click To Play](https://tic-tac.static.domains)
+The game is hosted and can be played online at: [Click To Play](https://tic-tactoe.static.domains)
 
 ## 🎮 Gameplay
 
