@@ -10,7 +10,17 @@ const endgamePopup = document.querySelector('.endgame');
 const endgameMessage = document.querySelector('.endgame .msg');
 const endgameNewgameBtn = document.querySelector('.endgame-newgame');
 
-cells.forEach(cell => cell.addEventListener('click', handleClick));
+cells.forEach(cell => {
+    cell.addEventListener('click', handleClick);
+    cell.addEventListener('mouseover', () => {
+        if (board[cell.getAttribute('data-index')] === '') {
+            cell.setAttribute('data-hover', currentPlayer === player ? ai : player);
+        }
+    });
+    cell.addEventListener('mouseout', () => {
+        cell.setAttribute('data-hover', ''); // Clear the hover effect when the mouse leaves
+    });
+});
 
 function selectMode(mode) {
     gameMode = mode;
@@ -74,7 +84,7 @@ function makeMove(index, currentPlayer) {
     const span = cell.querySelector('span');
     cell.classList.remove('x', 'o');
     cell.classList.add(currentPlayer.toLowerCase());
-    cell.setAttribute('data-hover', currentPlayer); // Set hover effect text
+    cell.setAttribute('data-hover', currentPlayer); // Set hover effect text to the current player
     span.textContent = currentPlayer;
     span.classList.add('show');
     
@@ -86,7 +96,7 @@ function makeMove(index, currentPlayer) {
 }
 
 function showEndgamePopup(resultType) {
-    endgamePopup.style.display = 'block';
+    endgamePopup.style.display = 'flex';
     if (resultType === 'player') {
         endgameMessage.className = 'msg msg--x-win';
         endgameMessage.textContent = gameMode === 'ai' ? 'You win!' : `${player1Name} wins!`;
@@ -113,10 +123,10 @@ function resetBoard() {
         span.classList.remove('show');
         span.textContent = '';
     });
-    document.getElementById('game-board').style.display = 'none';
-    document.getElementById('reset-btn').style.display = 'none';
-    document.getElementById('home-btn').style.display = 'none';
-    document.getElementById('mode-selector').style.display = 'block';
+    // document.getElementById('game-board').style.display = 'none';
+    // document.getElementById('reset-btn').style.display = 'none';
+    // document.getElementById('home-btn').style.display = 'none';
+    // document.getElementById('mode-selector').style.display = 'block';
 }
 
 function checkWinner(board, player) {

@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css?family=Mandali|Raleway:900&display=swap');
+
 body {
     display: flex;
     justify-content: center;
@@ -52,26 +54,43 @@ input {
 .cell {
     width: 100px;
     height: 100px;
-    background-color: #ffffff;
+    background-color: rgba(0, 0, 0, 0.10);
     display: flex;
     justify-content: center;
     align-items: center;
     font-size: 2rem;
     cursor: pointer;
     transition: background-color 0.3s, transform 0.3s;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    font-family: Raleway, Courier, 'Courier New', Sans, sans-serif;
+
+    /* box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); */
     position: relative;
 }
 
+.cell:nth-child(3n+1){
+    border-radius: 8px 0 0 8px;
+}
+
+.cell:nth-child(3n){
+    border-radius: 0 8px 8px 0;
+}
 .cell.x {
     background-color: #004974;
     color: #89dcf6;
+    
+    text-align: center;
+    font-size: 7.5vmin;
+    font-weight: bold;
+    text-shadow: 3px 3px #000000;
 }
 
 .cell.o {
     background-color: #a60011;
     color: #ffc7b5;
+    text-align: center;
+    font-size: 7.5vmin;
+    font-weight: bold;
+     text-shadow: 3px 3px #000000;
 }
 
 .cell span {
@@ -109,7 +128,15 @@ input {
 }
 
 .endgame {
+    height: 30vh;
+    width: 30vw;
     display: none;
+    flex-direction: column;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+
+
     position: fixed;
     top: 50%;
     left: 50%;
@@ -139,7 +166,12 @@ input {
 }
 
 .endgame-newgame {
-    background: #28a745;
+    background-color: #004974;
+    color: #89dcf6;
+    text-align: center;
+    font-size: 2.5vmin;
+    font-weight: bold;
+    text-shadow: 3px 3px #000000;
 }
 
 .endgame-newgame:hover {
